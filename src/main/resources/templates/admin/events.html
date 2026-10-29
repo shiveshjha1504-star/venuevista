@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{admin/_layout :: head('Events')}"></head>
+<body class="adm-body">
+<div class="adm-shell">
+  <aside th:replace="~{admin/_layout :: side('events')}"></aside>
+  <main class="adm-main">
+    <header class="adm-head">
+      <div><p class="eyebrow">Programme</p><h1>Events</h1></div>
+      <a href="/admin/events/new" class="btn btn-primary">+ New event</a>
+    </header>
+    <div class="alert ok" th:if="${msg}" th:text="${msg}"></div>
+    <div class="alert" th:if="${error}" th:text="${error}"></div>
+
+    <div class="panel">
+      <div class="table-wrap">
+      <table class="tbl">
+        <thead><tr><th>Event</th><th>Venue</th><th>Date</th><th>Status</th><th class="r">Sold</th><th>Fill</th><th class="r">Actions</th></tr></thead>
+        <tbody>
+          <tr th:each="c : ${cards}">
+            <td>
+              <div class="cell-ev">
+                <span class="mini-poster" th:style="'--h1:'+${c.event.hue1}+';--h2:'+${c.event.hue2}"></span>
+                <div><b th:text="${c.event.title}">Title</b><small th:text="${c.event.performer} + ' · ' + ${c.event.category}">x</small></div>
+              </div>
+            </td>
+            <td th:text="${c.event.venue.name}">Venue</td>
+            <td class="mono" th:text="${#temporals.format(c.event.startTime,'d MMM yyyy, h:mm a')}">date</td>
+            <td>
+              <span class="badge" th:classappend="${c.event.status.name().toLowerCase()}" th:text="${c.event.status}">PUBLISHED</span>
+              <span class="badge past" th:if="${!c.event.upcoming}">PAST</span>
+            </td>
+            <td class="r mono"><span th:text="${c.sold}">0</span> / <span th:text="${c.capacity}">0</span></td>
+            <td style="min-width:110px"><div class="meter"><i th:style="'width:'+${c.pct}+'%'"></i></div><small class="mono" th:text="${c.pct}+'%'">0%</small></td>
+            <td class="r actions">
+              <a class="btn btn-ghost btn-sm" th:href="@{/admin/events/{id}/edit(id=${c.event.id})}">Edit</a>
+              <a class="btn btn-ghost btn-sm" th:href="@{/events/{id}(id=${c.event.id})}" th:if="${c.event.status.name() != 'DRAFT'}" target="_blank">View</a>
+              <form method="post" th:action="@{/admin/events/{id}/status(id=${c.event.id})}" th:if="${c.event.status.name() == 'DRAFT'}">
+                <input type="hidden" name="status" value="PUBLISHED"><button class="btn btn-primary btn-sm">Publish</button></form>
+              <form method="post" th:action="@{/admin/events/{id}/status(id=${c.event.id})}" th:if="${c.event.status.name() == 'PUBLISHED'}">
+                <input type="hidden" name="status" value="CANCELLED"><button class="btn btn-ghost btn-sm" onclick="return confirm('Cancel this event? Ticket sales will stop.')">Cancel</button></form>
+              <form method="post" th:action="@{/admin/events/{id}/status(id=${c.event.id})}" th:if="${c.event.status.name() == 'CANCELLED'}">
+                <input type="hidden" name="status" value="PUBLISHED"><button class="btn btn-ghost btn-sm">Reopen</button></form>
+              <form method="post" th:action="@{/admin/events/{id}/delete(id=${c.event.id})}" th:if="${c.sold == 0}">
+                <button class="btn btn-danger btn-sm" onclick="return confirm('Delete this event?')">Delete</button></form>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      </div>
+    </div>
+  </main>
+</div>
+<script src="/js/app.js" defer></script>
+</body>
+</html>

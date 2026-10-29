@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{admin/_layout :: head('Orders')}"></head>
+<body class="adm-body">
+<div class="adm-shell">
+  <aside th:replace="~{admin/_layout :: side('orders')}"></aside>
+  <main class="adm-main">
+    <header class="adm-head">
+      <div><p class="eyebrow">Sales</p><h1>Orders</h1></div>
+      <form method="get" action="/admin/orders" class="search inline"><span aria-hidden="true">⌕</span><input type="search" name="q" th:value="${q}" placeholder="Reference, name, email, event"></form>
+    </header>
+    <div class="panel">
+      <div class="table-wrap">
+      <table class="tbl">
+        <thead><tr><th>Reference</th><th>Customer</th><th>Event</th><th>Seats</th><th class="r">Total</th><th>Placed</th></tr></thead>
+        <tbody>
+          <tr th:each="o : ${orders}">
+            <td><a class="mono" th:href="@{/order/{r}(r=${o.reference})}" target="_blank" th:text="${o.reference}">VVO</a></td>
+            <td><b th:text="${o.customerName}">Name</b><small th:text="${o.email}">email</small></td>
+            <td th:text="${o.event.title}">Event</td>
+            <td class="mono"><span th:each="t, st : ${o.tickets}" th:text="${t.rowLabel} + ${t.seatNo} + (${st.last} ? '' : ', ')">A1</span></td>
+            <td class="r mono" th:text="${@fmt.inr(o.total)}">₹0</td>
+            <td class="mono" th:text="${#temporals.format(o.createdAt,'d MMM, h:mm a')}">date</td>
+          </tr>
+          <tr th:if="${orders.isEmpty()}"><td colspan="6" class="muted center">No orders match.</td></tr>
+        </tbody>
+      </table>
+      </div>
+    </div>
+  </main>
+</div>
+<script src="/js/app.js" defer></script>
+</body>
+</html>

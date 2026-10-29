@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Seat maps, tickets & sell-out nights')}"></head>
+<body>
+<div th:replace="~{fragments/layout :: nav('home')}"></div>
+
+<main>
+  <section class="hero container">
+    <div class="hero-copy">
+      <p class="eyebrow"><span class="live-dot"></span> Live seat maps · Instant e-tickets</p>
+      <h1>See the room.<br><em>Sell the room.</em></h1>
+      <p class="lead">VenueVista is the ticketing and venue platform that lets fans pick the exact seat, and lets organizers watch every sale land in real time.</p>
+      <div class="hero-actions">
+        <a href="/events" class="btn btn-primary btn-lg">Find your seat <span aria-hidden="true">→</span></a>
+        <a href="/admin" class="btn btn-ghost btn-lg">Run an event</a>
+      </div>
+      <dl class="hero-stats">
+        <div><dt>Live events</dt><dd th:text="${statEvents}">9</dd></div>
+        <div><dt>Venues</dt><dd th:text="${statVenues}">3</dd></div>
+        <div><dt>Seats on the map</dt><dd th:text="${#numbers.formatInteger(statSeats,1,'COMMA')}">2,000</dd></div>
+        <div><dt>Tickets issued</dt><dd th:text="${#numbers.formatInteger(statTickets,1,'COMMA')}">1,500</dd></div>
+      </dl>
+    </div>
+    <div class="hero-art" aria-hidden="true">
+      <div class="fan-glow"></div>
+      <svg id="fan" viewBox="0 0 600 440" role="img"></svg>
+      <div class="fan-caption mono"><span class="live-dot"></span> seats are being booked right now</div>
+    </div>
+  </section>
+
+  <div class="ticker" aria-hidden="true">
+    <div class="ticker-track">
+      <span>Concerts</span><span>✦</span><span>Comedy</span><span>✦</span><span>Theatre</span><span>✦</span><span>Festivals</span><span>✦</span><span>Conferences</span><span>✦</span>
+      <span>Concerts</span><span>✦</span><span>Comedy</span><span>✦</span><span>Theatre</span><span>✦</span><span>Festivals</span><span>✦</span><span>Conferences</span><span>✦</span>
+    </div>
+  </div>
+
+  <section class="container section" id="tonight">
+    <div class="section-head">
+      <div><p class="eyebrow">On sale now</p><h2>Next up on the <em>marquee</em></h2></div>
+      <a href="/events" class="link-arrow">All events →</a>
+    </div>
+    <div class="stub-list">
+      <th:block th:each="c : ${featured}"><div th:replace="~{fragments/layout :: stub(${c})}"></div></th:block>
+      <th:block th:each="c : ${upcoming}"><div th:replace="~{fragments/layout :: stub(${c})}"></div></th:block>
+    </div>
+  </section>
+
+  <section class="container section" id="features">
+    <div class="section-head"><div><p class="eyebrow">Everything backstage</p><h2>One platform, <em>front row to final tally</em></h2></div></div>
+    <div class="bento">
+      <article class="bento-card b-wide">
+        <span class="chip">Seating charts</span>
+        <h3>Pick the exact seat.</h3>
+        <p>Tiered sections, row-by-row seat maps and a “find best seats” assistant that hunts down the most central block for your group. Sold seats lock instantly, so nobody is ever double-booked.</p>
+        <div class="mini-seats" aria-hidden="true"></div>
+      </article>
+      <article class="bento-card">
+        <span class="chip">E-tickets</span>
+        <h3>QR in seconds.</h3>
+        <p>Every seat gets its own scannable ticket the moment checkout completes.</p>
+      </article>
+      <article class="bento-card">
+        <span class="chip">Gate check-in</span>
+        <h3>Scan. Welcome. Next.</h3>
+        <p>Validate tickets at the door; duplicate scans are flagged on the spot.</p>
+      </article>
+      <article class="bento-card b-wide b-tall">
+        <span class="chip">Sales analytics</span>
+        <h3>Watch the night fill up.</h3>
+        <p>Revenue by day, tier and category, occupancy per event, and a live order feed. All in the organizer console.</p>
+        <svg class="spark" viewBox="0 0 400 90" preserveAspectRatio="none" aria-hidden="true">
+          <defs><linearGradient id="sg" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#ffb627" stop-opacity=".5"/><stop offset="1" stop-color="#ffb627" stop-opacity="0"/></linearGradient></defs>
+          <path d="M0 80 C40 70 60 40 100 50 S160 75 200 45 S280 10 320 25 S380 8 400 5 L400 90 L0 90Z" fill="url(#sg)"/>
+          <path d="M0 80 C40 70 60 40 100 50 S160 75 200 45 S280 10 320 25 S380 8 400 5" fill="none" stroke="#ffb627" stroke-width="2.5"/>
+        </svg>
+      </article>
+    </div>
+  </section>
+
+  <section class="container section" id="venues">
+    <div class="section-head"><div><p class="eyebrow">Our stages</p><h2>Rooms worth <em>showing up</em> for</h2></div></div>
+    <div class="venue-grid">
+      <article class="venue-card" th:each="v, st : ${venues}">
+        <span class="venue-no mono" th:text="${'0' + (st.index + 1)}">01</span>
+        <h3 th:text="${v.name}">Venue</h3>
+        <p class="mono city" th:text="${v.city}">City</p>
+        <p th:text="${v.description}">desc</p>
+        <div class="venue-foot">
+          <span class="mono"><b th:text="${#numbers.formatInteger(v.capacity,1,'COMMA')}">2000</b> seats</span>
+          <span class="mono"><b th:text="${#lists.size(v.sections)}">7</b> sections</span>
+        </div>
+      </article>
+    </div>
+  </section>
+</main>
+
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+</body>
+</html>

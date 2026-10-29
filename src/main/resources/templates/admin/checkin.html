@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{admin/_layout :: head('Gate check-in')}"></head>
+<body class="adm-body">
+<div class="adm-shell">
+  <aside th:replace="~{admin/_layout :: side('checkin')}"></aside>
+  <main class="adm-main">
+    <header class="adm-head"><div><p class="eyebrow">At the door</p><h1>Gate <em>check-in</em></h1></div></header>
+    <div class="checkin">
+      <form id="ciForm" class="panel">
+        <label>Ticket code
+          <input id="ciCode" class="mono big-input" placeholder="VV-XXXXXXXXXX" autocomplete="off" autofocus>
+        </label>
+        <button class="btn btn-primary btn-lg" type="submit">Validate ticket</button>
+        <p class="fine">Use a handheld scanner (it types the code and presses Enter) or paste a code from a customer's ticket.</p>
+      </form>
+      <div id="ciResult" class="ci-result idle"><span class="ci-icon">⌗</span><p>Waiting for a ticket…</p></div>
+    </div>
+    <ul class="ci-log mono" id="ciLog"></ul>
+  </main>
+</div>
+<script src="/js/app.js" defer></script>
+<script src="/js/admin.js" defer></script>
+</body>
+</html>

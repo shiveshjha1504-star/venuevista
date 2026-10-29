@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Discover events')}"></head>
+<body>
+<div th:replace="~{fragments/layout :: nav('events')}"></div>
+<main class="container section page-top">
+  <div class="section-head">
+    <div><p class="eyebrow">Discover</p><h1 class="h1-sm">What's <em>playing</em></h1></div>
+  </div>
+
+  <form class="filters" method="get" action="/events">
+    <label class="search"><span aria-hidden="true">⌕</span>
+      <input type="search" name="q" th:value="${q}" placeholder="Search artist, event, venue or city">
+    </label>
+    <div class="pills">
+      <a th:href="@{/events(q=${q})}" class="pill" th:classappend="${category == ''} ? 'on'">All</a>
+      <a th:each="c : ${categories}" th:href="@{/events(q=${q},category=${c})}" class="pill"
+         th:classappend="${category == c} ? 'on'" th:text="${c}">Concert</a>
+    </div>
+    <button class="btn btn-primary btn-sm" type="submit">Search</button>
+  </form>
+
+  <div class="stub-list" th:if="${!cards.isEmpty()}">
+    <th:block th:each="c : ${cards}"><div th:replace="~{fragments/layout :: stub(${c})}"></div></th:block>
+  </div>
+  <div class="empty" th:if="${cards.isEmpty()}">
+    <div class="empty-icon">∅</div>
+    <h3>Nothing on stage for that search</h3>
+    <p>Try a different keyword or clear the filters.</p>
+    <a href="/events" class="btn btn-ghost">Clear filters</a>
+  </div>
+</main>
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+</body>
+</html>

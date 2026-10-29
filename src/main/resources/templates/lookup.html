@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Find my tickets')}"></head>
+<body>
+<div th:replace="~{fragments/layout :: nav('lookup')}"></div>
+<main class="container section page-top narrow">
+  <p class="eyebrow">Lost your tickets?</p>
+  <h1 class="h1-sm">Find my <em>tickets</em></h1>
+  <p class="muted">Enter the order reference from your confirmation (it looks like <span class="mono">VVO-ABCD2345</span>) and the email you booked with.</p>
+  <form class="card-form" method="post" action="/lookup">
+    <div class="alert" th:if="${error}" th:text="${error}">Error</div>
+    <label>Order reference<input name="reference" required placeholder="VVO-ABCD2345" class="mono"></label>
+    <label>Email<input name="email" type="email" required placeholder="you@example.com"></label>
+    <button class="btn btn-primary btn-block" type="submit">Show my tickets</button>
+  </form>
+</main>
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+</body>
+</html>

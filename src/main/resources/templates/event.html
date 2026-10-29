@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head(${e.title})}"></head>
+<body>
+<div th:replace="~{fragments/layout :: nav('events')}"></div>
+<main>
+  <section class="event-hero" th:style="'--h1:'+${e.hue1}+';--h2:'+${e.hue2}">
+    <div class="container event-hero-in">
+      <a href="/events" class="back">← All events</a>
+      <p class="eyebrow"><span th:text="${e.category}">Concert</span> · <span th:text="${e.venue.city}">City</span></p>
+      <h1 th:text="${e.title}">Event</h1>
+      <p class="performer big" th:text="${e.performer}">Performer</p>
+      <div class="facts">
+        <div><small>When</small><b th:text="${#temporals.format(e.startTime,'EEE, d MMM yyyy')}">Fri</b><span th:text="${#temporals.format(e.startTime,'h:mm a')}">7:00 PM</span></div>
+        <div><small>Where</small><b th:text="${e.venue.name}">Venue</b><span th:text="${e.venue.address}">Address</span></div>
+        <div><small>Availability</small><b th:text="${card.soldOut} ? 'Sold out' : ${card.left} + ' seats left'">120</b><span th:text="${card.pct} + '% sold'">40% sold</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="container section event-layout">
+    <div class="event-main">
+      <div class="about">
+        <h2>About the night</h2>
+        <p th:text="${e.description}">Description</p>
+        <ul class="tier-legend">
+          <li th:each="t : ${tiers}" th:if="${e.priceFor(t) > 0}">
+            <i class="dot" th:classappend="${t.css}"></i><b th:text="${t.label}">VIP</b>
+            <span class="mono" th:text="${@fmt.inr(e.priceFor(t))}">₹4,500</span>
+          </li>
+        </ul>
+      </div>
+
+      <div class="notice" th:if="${!e.onSale}">
+        <b th:text="${e.status.name() == 'CANCELLED'} ? 'This event has been cancelled.' : 'Ticket sales for this event have closed.'">closed</b>
+        The seating chart below is read-only.
+      </div>
+
+      <div class="map-controls" th:if="${e.onSale}">
+        <div class="qty">
+          <span class="mono">Group size</span>
+          <button type="button" id="qMinus" aria-label="Fewer">−</button>
+          <output id="qVal">2</output>
+          <button type="button" id="qPlus" aria-label="More">+</button>
+        </div>
+        <button type="button" class="btn btn-ghost btn-sm" id="bestBtn">✦ Find best seats</button>
+        <button type="button" class="btn btn-ghost btn-sm" id="clearBtn">Clear</button>
+      </div>
+
+      <div class="map-card">
+        <div class="legend">
+          <span><i class="seat sm"></i> Available</span>
+          <span><i class="seat sm sel"></i> Yours</span>
+          <span><i class="seat sm taken"></i> Taken</span>
+        </div>
+        <div class="map-scroll">
+          <div id="seatmap" th:attr="data-event=${e.id}">
+            <div class="stage"><span>STAGE</span></div>
+            <div id="bands" class="bands"><p class="loading mono">Loading seat map…</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <aside class="cart" id="cart">
+      <div class="cart-stub">
+        <p class="eyebrow">Your tickets</p>
+        <ul id="cartList" class="cart-list"><li class="cart-empty">Pick seats on the map to begin.</li></ul>
+        <div class="cart-total"><span>Total</span><strong id="cartTotal">₹0</strong></div>
+        <div class="perf" aria-hidden="true"></div>
+        <form id="checkout" autocomplete="on" th:if="${e.onSale}">
+          <label>Full name<input name="name" required maxlength="80" placeholder="Aarav Sharma" autocomplete="name"></label>
+          <label>Email for tickets<input name="email" type="email" required maxlength="120" placeholder="you@example.com" autocomplete="email"></label>
+          <button class="btn btn-primary btn-block" id="payBtn" type="submit" disabled>Get my tickets</button>
+          <p class="fine" id="formMsg" role="alert"></p>
+          <p class="fine">Demo checkout: no real payment is taken. Max 8 seats per order.</p>
+        </form>
+      </div>
+    </aside>
+  </section>
+</main>
+<div class="tooltip" id="tip" role="tooltip"></div>
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+<script src="/js/seatmap.js" defer></script>
+</body>
+</html>

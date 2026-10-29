@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{admin/_layout :: head('Analytics')}"></head>
+<body class="adm-body">
+<div class="adm-shell">
+  <aside th:replace="~{admin/_layout :: side('dash')}"></aside>
+  <main class="adm-main">
+    <header class="adm-head">
+      <div><p class="eyebrow">Sales analytics</p><h1>The house <em>tonight</em></h1></div>
+      <a href="/admin/events/new" class="btn btn-primary">+ New event</a>
+    </header>
+
+    <section class="kpis" id="kpis"></section>
+
+    <section class="grid-2">
+      <div class="panel wide">
+        <div class="panel-head"><h3>Revenue · last 30 days</h3><span class="mono muted" id="rangeTotal"></span></div>
+        <div id="areaChart" class="chart"></div>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><h3>Revenue by tier</h3></div>
+        <div id="donut" class="donut-wrap"></div>
+      </div>
+    </section>
+
+    <section class="grid-2">
+      <div class="panel wide">
+        <div class="panel-head"><h3>Event performance</h3><span class="mono muted">occupancy &amp; revenue</span></div>
+        <div id="eventBars"></div>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><h3>By category</h3></div>
+        <div id="catBars"></div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head"><h3>Live order feed</h3><a class="link-arrow" href="/admin/orders">All orders →</a></div>
+      <div class="table-wrap"><table class="tbl" id="recent"><thead><tr><th>Reference</th><th>Customer</th><th>Event</th><th class="r">Seats</th><th class="r">Total</th><th>When</th></tr></thead><tbody></tbody></table></div>
+    </section>
+
+    <p class="adm-foot mono">VenueVista · a product of Infotact Solutions · Electronic City, Bengaluru 560100 · support@infotact.in</p>
+  </main>
+</div>
+<script id="analytics-data" type="application/json" th:utext="${analyticsJson}">{}</script>
+<script src="/js/app.js" defer></script>
+<script src="/js/admin.js" defer></script>
+</body>
+</html>

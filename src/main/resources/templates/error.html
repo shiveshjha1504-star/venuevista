@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Off stage')}"></head>
+<body>
+<div th:replace="~{fragments/layout :: nav('')}"></div>
+<main class="container section page-top narrow center">
+  <p class="big-num" th:text="${status} ?: '404'">404</p>
+  <h1 class="h1-sm">This seat <em>doesn't exist</em></h1>
+  <p class="muted">The page you're looking for has left the building, or never had a ticket.</p>
+  <a href="/" class="btn btn-primary">Back to the lobby</a>
+</main>
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+</body>
+</html>

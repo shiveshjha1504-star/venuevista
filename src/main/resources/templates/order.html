@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Your tickets')}"></head>
+<body>
+<div th:replace="~{fragments/layout :: nav('lookup')}"></div>
+<main class="container section page-top">
+  <div class="confirm-head">
+    <div class="check">✓</div>
+    <div>
+      <p class="eyebrow">Order confirmed</p>
+      <h1 class="h1-sm">You're <em>in</em>, <span th:text="${#strings.arraySplit(o.customerName,' ')[0]}">Aarav</span>.</h1>
+      <p class="muted">Reference <b class="mono" th:text="${o.reference}">VVO-XXXX</b> · sent to <span th:text="${o.email}">email</span> · total <b th:text="${@fmt.inr(o.total)}">₹0</b></p>
+    </div>
+    <button class="btn btn-ghost" onclick="window.print()">Print tickets</button>
+  </div>
+
+  <div class="tickets">
+    <article class="ticket" th:each="t : ${o.tickets}" th:classappend="${t.section.tier.css}">
+      <div class="ticket-main" th:style="'--h1:'+${o.event.hue1}+';--h2:'+${o.event.hue2}">
+        <p class="mono kicker"><span th:text="${t.section.tier.label}">VIP</span> admission · VenueVista</p>
+        <h2 th:text="${o.event.title}">Event</h2>
+        <p class="performer" th:text="${o.event.performer}">Performer</p>
+        <div class="ticket-grid">
+          <div><small>Date</small><b th:text="${#temporals.format(o.event.startTime,'EEE d MMM yyyy')}">date</b></div>
+          <div><small>Doors / Show</small><b th:text="${#temporals.format(o.event.startTime,'h:mm a')}">7 PM</b></div>
+          <div><small>Venue</small><b th:text="${o.event.venue.name}">venue</b></div>
+          <div><small>Section</small><b th:text="${t.section.name}">sec</b></div>
+          <div><small>Row</small><b class="big" th:text="${t.rowLabel}">A</b></div>
+          <div><small>Seat</small><b class="big" th:text="${t.seatNo}">1</b></div>
+        </div>
+        <p class="mono holder">Holder: <span th:text="${o.customerName}">Name</span></p>
+      </div>
+      <div class="ticket-qr">
+        <img th:src="@{/qr/{c}(c=${t.code})}" alt="QR code" width="140" height="140">
+        <p class="mono code" th:text="${t.code}">VV-XXXXXXXXXX</p>
+        <p class="mono price" th:text="${@fmt.inr(t.price)}">₹0</p>
+      </div>
+    </article>
+  </div>
+</main>
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+</body>
+</html>

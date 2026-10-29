@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{admin/_layout :: head('Event')}"></head>
+<body class="adm-body">
+<div class="adm-shell">
+  <aside th:replace="~{admin/_layout :: side('events')}"></aside>
+  <main class="adm-main">
+    <header class="adm-head">
+      <div><p class="eyebrow">Programme</p><h1 th:text="${form.id == null} ? 'New event' : 'Edit event'">Event</h1></div>
+      <a href="/admin/events" class="btn btn-ghost">← Back</a>
+    </header>
+    <div class="alert" th:if="${error}" th:text="${error}"></div>
+    <div class="alert warn" th:if="${locked}">Tickets have been sold, so the venue is locked for this event.</div>
+
+    <form method="post" action="/admin/events" class="panel form-grid">
+      <input type="hidden" name="id" th:value="${form.id}">
+      <label class="span2">Title<input name="title" th:value="${form.title}" required maxlength="120"></label>
+      <label>Performer / Host<input name="performer" th:value="${form.performer}" maxlength="120"></label>
+      <label>Category
+        <input name="category" th:value="${form.category}" list="cats" placeholder="Concert, Comedy, Theatre…">
+        <datalist id="cats"><option>Concert</option><option>Comedy</option><option>Theatre</option><option>Festival</option><option>Conference</option><option>Sports</option></datalist>
+      </label>
+      <label>Venue
+        <select name="venueId" required th:disabled="${locked}">
+          <option th:each="v : ${venues}" th:value="${v.id}" th:selected="${v.id == form.venueId}" th:text="${v.name} + ' — ' + ${v.city} + ' (' + ${v.capacity} + ' seats)'">Venue</option>
+        </select>
+        <input type="hidden" name="venueId" th:if="${locked}" th:value="${form.venueId}">
+      </label>
+      <label>Starts<input type="datetime-local" name="startTime" th:value="${form.startTime}" required></label>
+      <label class="span2">Description<textarea name="description" rows="4" maxlength="2000" th:text="${form.description}"></textarea></label>
+
+      <fieldset class="span2 prices">
+        <legend>Ticket prices (₹ per seat, 0 = tier not sold)</legend>
+        <label><i class="dot vip"></i> VIP<input type="number" min="0" step="50" name="priceVip" th:value="${form.priceVip}"></label>
+        <label><i class="dot premium"></i> Premium<input type="number" min="0" step="50" name="pricePremium" th:value="${form.pricePremium}"></label>
+        <label><i class="dot standard"></i> Standard<input type="number" min="0" step="50" name="priceStandard" th:value="${form.priceStandard}"></label>
+      </fieldset>
+
+      <fieldset class="span2 art">
+        <legend>Poster artwork</legend>
+        <div class="poster live" id="posterPreview" th:style="'--h1:'+${form.hue1}+';--h2:'+${form.hue2}"><span class="poster-cat">Preview</span></div>
+        <div class="sliders">
+          <label>Hue A<input type="range" min="0" max="360" name="hue1" id="hue1" th:value="${form.hue1}"></label>
+          <label>Hue B<input type="range" min="0" max="360" name="hue2" id="hue2" th:value="${form.hue2}"></label>
+        </div>
+      </fieldset>
+
+      <label>Status
+        <select name="status">
+          <option th:each="s : ${statuses}" th:value="${s}" th:selected="${s.name() == form.status}" th:text="${s}">DRAFT</option>
+        </select>
+      </label>
+      <div class="span2 form-actions"><button class="btn btn-primary btn-lg" type="submit">Save event</button></div>
+    </form>
+  </main>
+</div>
+<script src="/js/app.js" defer></script>
+<script>
+  (function(){var p=document.getElementById('posterPreview');['hue1','hue2'].forEach(function(id){
+    document.getElementById(id).addEventListener('input',function(){p.style.setProperty('--'+(id==='hue1'?'h1':'h2'),this.value);});});})();
+</script>
+</body>
+</html>

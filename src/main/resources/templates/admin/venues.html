@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{admin/_layout :: head('Venues')}"></head>
+<body class="adm-body">
+<div class="adm-shell">
+  <aside th:replace="~{admin/_layout :: side('venues')}"></aside>
+  <main class="adm-main">
+    <header class="adm-head">
+      <div><p class="eyebrow">Spaces</p><h1>Venues &amp; seating</h1></div>
+      <a href="/admin/venues/new" class="btn btn-primary">+ New venue</a>
+    </header>
+    <div class="alert ok" th:if="${msg}" th:text="${msg}"></div>
+    <div class="alert" th:if="${error}" th:text="${error}"></div>
+
+    <div class="venue-admin">
+      <article class="panel" th:each="v : ${venues}">
+        <div class="panel-head">
+          <div><h3 th:text="${v.name}">Venue</h3><p class="muted mono" th:text="${v.city} + ' · ' + ${v.capacity} + ' seats'">City</p></div>
+          <form method="post" th:action="@{/admin/venues/{id}/delete(id=${v.id})}"><button class="btn btn-danger btn-sm" onclick="return confirm('Delete this venue?')">Delete</button></form>
+        </div>
+        <p class="muted" th:text="${v.description}">desc</p>
+        <ul class="sec-list">
+          <li th:each="s : ${v.sections}">
+            <i class="dot" th:classappend="${s.tier.css}"></i>
+            <b th:text="${s.name}">Section</b>
+            <span class="mono" th:text="${s.rowsCount} + ' rows × ' + ${s.seatsPerRow} + ' seats'">6×8</span>
+            <span class="mono muted" th:text="${s.capacity}">48</span>
+          </li>
+        </ul>
+      </article>
+    </div>
+  </main>
+</div>
+<script src="/js/app.js" defer></script>
+</body>
+</html>
